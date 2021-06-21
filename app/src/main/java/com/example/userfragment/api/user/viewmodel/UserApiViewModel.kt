@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserApiViewModel(private val apiManager: UserApiManager)  : ViewModel(){
+class UserApiViewModel(private val apiManager: UserApiManager) : ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
 
@@ -32,8 +32,11 @@ class UserApiViewModel(private val apiManager: UserApiManager)  : ViewModel(){
                     call: Call<UserResponse>,
                     response: Response<UserResponse>
                 ) {
-                    Log.i("bear",response.body().toString())
-                    user.postValue(response.body())
+                    if (response.isSuccessful) {
+                        user.postValue(response.body())
+                    } else {
+                        
+                    }
                 }
             })
     }
@@ -41,17 +44,21 @@ class UserApiViewModel(private val apiManager: UserApiManager)  : ViewModel(){
     fun getUserList() {
         UserApiManager.getUserList()
             .enqueue(object : Callback<UserListResponse> {
-            override fun onFailure(call: Call<UserListResponse>, t: Throwable) {
-                errorMessage.postValue(t.message)
-            }
+                override fun onFailure(call: Call<UserListResponse>, t: Throwable) {
+                    errorMessage.postValue(t.message)
+                }
 
-            override fun onResponse(
-                call: Call<UserListResponse>,
-                response: Response<UserListResponse>
-            ) {
-                userList.postValue(response.body())
-            }
-        })
+                override fun onResponse(
+                    call: Call<UserListResponse>,
+                    response: Response<UserListResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        userList.postValue(response.body())
+                    } else {
+
+                    }
+                }
+            })
     }
 
     fun getUserInfo(name: String) {
@@ -65,7 +72,11 @@ class UserApiViewModel(private val apiManager: UserApiManager)  : ViewModel(){
                     call: Call<UserInfoResponse>,
                     response: Response<UserInfoResponse>
                 ) {
-                    userInfo.postValue(response.body())
+                    if (response.isSuccessful) {
+                        userInfo.postValue(response.body())
+                    } else {
+
+                    }
                 }
             })
     }

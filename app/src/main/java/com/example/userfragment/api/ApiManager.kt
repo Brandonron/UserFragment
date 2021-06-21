@@ -17,7 +17,8 @@ open class ApiManager {
                     val original: Request = chain.request()
 
                     val new: Request = original.newBuilder()
-                        .header("Content-Type", "application/json")
+                        .addHeader("Authorization","")
+                        .addHeader("Content-Type", "application/json")
                         .method(original.method(), original.body())
                         .build()
 
