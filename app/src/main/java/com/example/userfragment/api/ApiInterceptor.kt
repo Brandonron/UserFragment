@@ -13,7 +13,7 @@ class ApiInterceptor : Interceptor {
         val new: Request = original.newBuilder()
             .addHeader("Content-Type", "application/json")
             .addHeader(
-                "Authentication",
+                "Authorization",
                 "token " + access_token
             )
             .method(original.method, original.body)
