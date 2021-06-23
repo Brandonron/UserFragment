@@ -33,9 +33,13 @@ class UserApiViewModel(private val apiManager: UserApiManager) : ViewModel() {
                     response: Response<UserResponse>
                 ) {
                     if (response.isSuccessful) {
+                        Log.i("bear", "response.isSuccessful")
+                        Log.i("bear", response.body().toString())
                         user.postValue(response.body())
                     } else {
-                        
+                        Log.i("bear", "response.failed")
+                        Log.i("bear", "" + response.code())
+                        Log.i("bear", "" + response.errorBody()?.string())
                     }
                 }
             })
