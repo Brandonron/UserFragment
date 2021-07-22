@@ -1,21 +1,19 @@
-package com.example.userfragment.api
+package com.example.dramaproject.api.base
 
 import com.example.userfragment.BuildConfig
-import com.google.gson.Gson
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
-open class ApiManager {
-    private val apiURL = "https://api.github.com/"
+abstract class ApiService : ApiParameter {
 
-    protected fun initOkhttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
+    val okhttpClient: OkHttpClient.Builder by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(apiConnectTime(), TimeUnit.SECONDS)
+            .readTimeout(apiReadTime(), TimeUnit.SECONDS)
+            .writeTimeout(apiWriteTime(), TimeUnit.SECONDS)
             .addInterceptor(ApiInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(
@@ -26,14 +24,12 @@ open class ApiManager {
                     }
                 )
             )
-            .build()
     }
 
-    protected fun initRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(apiURL)
+    val retrofitClient: Retrofit.Builder by lazy {
+        Retrofit.Builder()
+            .baseUrl(apiURL())
+            .client(okhttpClient.build())
             .addConverterFactory(GsonConverterFactory.create())
-            .build()
     }
 }

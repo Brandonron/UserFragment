@@ -1,16 +1,16 @@
 package com.example.userfragment.api.user
 
-import com.example.userfragment.api.ApiManager
+import com.example.userfragment.api.base.ApiManager
 
-object UserApiManager : ApiManager() {
+object UserApiManager : ApiManager<UserApiInterface>() {
 
-    private fun callAPI(): UserApiInterface {
-        return initRetrofit(initOkhttpClient()).create(UserApiInterface::class.java)
+    override fun serviceClass(): Class<UserApiInterface> {
+        return UserApiInterface::class.java
     }
 
-    fun getUser() = callAPI().user()
+    fun getUser() = createAPI().user()
 
-    fun getUserList() = callAPI().userList()
+    fun getUserList() = createAPI().userList()
 
-    fun getUserInfo(name: String) = callAPI().userInfo(name)
+    fun getUserInfo(name: String) = createAPI().userInfo(name)
 }

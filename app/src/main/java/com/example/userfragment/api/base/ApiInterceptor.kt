@@ -1,4 +1,4 @@
-package com.example.userfragment.api
+package com.example.dramaproject.api.base
 
 import android.text.TextUtils
 import okhttp3.Interceptor

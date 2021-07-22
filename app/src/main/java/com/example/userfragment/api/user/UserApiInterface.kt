@@ -1,8 +1,10 @@
 package com.example.userfragment.api.user
 
+import com.example.userfragment.api.user.response.UserInfoResponse
+import com.example.userfragment.api.user.response.UserListResponse
+import com.example.userfragment.api.user.response.UserResponse
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Path
 
 

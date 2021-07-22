@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.userfragment.api.user.UserApiManager
-import com.example.userfragment.api.user.UserListResponse
-import com.example.userfragment.api.user.UserInfoResponse
-import com.example.userfragment.api.user.UserResponse
+import com.example.userfragment.api.user.response.UserListResponse
+import com.example.userfragment.api.user.response.UserInfoResponse
+import com.example.userfragment.api.user.response.UserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserApiViewModel(private val apiManager: UserApiManager) : ViewModel() {
+class UserApiViewModel() : ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
 

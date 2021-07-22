@@ -8,19 +8,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dramaproject.base.viewmodel.BaseViewModelFactory
 import com.example.userfragment.R
 import com.example.userfragment.adapter.user.OnUserClickListener
 import com.example.userfragment.adapter.user.UserAdapterData
 import com.example.userfragment.adapter.user.UserRecyclerAdapter
 import com.example.userfragment.api.user.UserApiManager
 import com.example.userfragment.api.user.viewmodel.UserApiViewModel
-import com.example.userfragment.api.user.viewmodel.UserApiViewModelFactory
 import com.example.userfragment.ui.detail.DetailFragment
 
 class UserFragment : Fragment() {
 
-    private lateinit var userRecyclerAdapter  : UserRecyclerAdapter
+    private lateinit var userRecyclerAdapter: UserRecyclerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,11 +52,11 @@ class UserFragment : Fragment() {
     }
 
     fun apiUserList() {
-        var userApiViewModel: UserApiViewModel
-        userApiViewModel = ViewModelProvider(
+        var userApiViewModel: UserApiViewModel = ViewModelProviders.of(
             this,
-            UserApiViewModelFactory(UserApiManager)
-        ).get(UserApiViewModel::class.java)
+            BaseViewModelFactory { UserApiViewModel() })
+            .get(UserApiViewModel::class.java)
+
         userApiViewModel.userList.observe(viewLifecycleOwner, Observer {
             var list: ArrayList<UserAdapterData> = ArrayList<UserAdapterData>()
             it?.forEach { item ->

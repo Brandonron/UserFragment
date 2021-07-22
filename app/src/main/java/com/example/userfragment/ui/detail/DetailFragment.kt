@@ -8,13 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.example.dramaproject.base.viewmodel.BaseViewModelFactory
 import com.example.userfragment.R
-import com.example.userfragment.api.user.UserApiManager
 import com.example.userfragment.api.user.viewmodel.UserApiViewModel
-import com.example.userfragment.api.user.viewmodel.UserApiViewModelFactory
 import com.facebook.drawee.view.SimpleDraweeView
-
 
 class DetailFragment(val name: String) : DialogFragment() {
 
@@ -73,7 +71,7 @@ class DetailFragment(val name: String) : DialogFragment() {
 
         userImg = view.findViewById(R.id.img_user)
 
-        userName= view.findViewById(R.id.name)
+        userName = view.findViewById(R.id.name)
         userSubName = view.findViewById(R.id.subName)
         userLocal = view.findViewById(R.id.location)
         userLink = view.findViewById(R.id.link)
@@ -82,11 +80,11 @@ class DetailFragment(val name: String) : DialogFragment() {
     }
 
     fun apiUserInfo() {
-        var userApiViewModel: UserApiViewModel
-        userApiViewModel = ViewModelProvider(
+        var userApiViewModel: UserApiViewModel = ViewModelProviders.of(
             this,
-            UserApiViewModelFactory(UserApiManager)
-        ).get(UserApiViewModel::class.java)
+            BaseViewModelFactory { UserApiViewModel() })
+            .get(UserApiViewModel::class.java)
+
         userApiViewModel.userInfo.observe(viewLifecycleOwner, Observer {
             userImg.setImageURI(it?.avatar_url)
 
