@@ -1,5 +1,6 @@
 package com.example.userfragment.api
 
+import android.text.TextUtils
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -14,7 +15,7 @@ class ApiInterceptor : Interceptor {
             .addHeader("Content-Type", "application/json")
             .addHeader(
                 "Authorization",
-                "token " + access_token
+                if (TextUtils.isEmpty(access_token)) "" else "token " + access_token
             )
             .method(original.method, original.body)
             .build()
