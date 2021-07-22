@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dramaproject.base.viewmodel.BaseViewModelFactory
@@ -15,9 +14,8 @@ import com.example.userfragment.R
 import com.example.userfragment.adapter.user.OnUserClickListener
 import com.example.userfragment.adapter.user.UserAdapterData
 import com.example.userfragment.adapter.user.UserRecyclerAdapter
-import com.example.userfragment.api.user.UserApiManager
 import com.example.userfragment.api.user.viewmodel.UserApiViewModel
-import com.example.userfragment.ui.detail.DetailFragment
+import com.example.userfragment.ui.detail.DetailDialogFragment
 
 class UserFragment : Fragment() {
 
@@ -35,7 +33,7 @@ class UserFragment : Fragment() {
             object : OnUserClickListener {
                 override fun onClick(userAdapterData: UserAdapterData) {
 
-                    val detailFragment: DetailFragment = DetailFragment(userAdapterData.name)
+                    val detailFragment: DetailDialogFragment = DetailDialogFragment(userAdapterData.name)
                     detailFragment.isCancelable = false
                     detailFragment.show(childFragmentManager, "fragmentDialog")
 
