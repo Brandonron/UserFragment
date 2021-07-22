@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class ApiService : ApiParameter {
 
-    val okhttpClient: OkHttpClient.Builder by lazy {
+    protected val okhttpClient: OkHttpClient.Builder by lazy {
         OkHttpClient.Builder()
             .connectTimeout(apiConnectTime(), TimeUnit.SECONDS)
             .readTimeout(apiReadTime(), TimeUnit.SECONDS)
@@ -26,10 +26,24 @@ abstract class ApiService : ApiParameter {
             )
     }
 
-    val retrofitClient: Retrofit.Builder by lazy {
+    protected val retrofitClient: Retrofit.Builder by lazy {
         Retrofit.Builder()
             .baseUrl(apiURL())
             .client(okhttpClient.build())
             .addConverterFactory(GsonConverterFactory.create())
     }
+
+    override fun apiConnectTime(): Long {
+        return 15
+    }
+
+    override fun apiReadTime(): Long {
+        return 15
+    }
+
+    override fun apiWriteTime(): Long {
+        return 15
+    }
+
+    protected inline fun <reified T> createAPI(): T = retrofitClient.build().create(T::class.java)
 }

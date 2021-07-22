@@ -1,16 +1,16 @@
 package com.example.userfragment.api.user
 
-import com.example.userfragment.api.base.ApiManager
+import com.example.dramaproject.api.base.ApiService
 
-object UserApiManager : ApiManager<UserApiInterface>() {
+object UserApiManager : ApiService() {
 
-    override fun serviceClass(): Class<UserApiInterface> {
-        return UserApiInterface::class.java
+    override fun apiURL(): String {
+        return "https://api.github.com/"
     }
 
-    fun getUser() = createAPI().user()
+    fun getUser() = createAPI<UserApiInterface>().user()
 
-    fun getUserList() = createAPI().userList()
+    fun getUserList() = createAPI<UserApiInterface>().userList()
 
-    fun getUserInfo(name: String) = createAPI().userInfo(name)
+    fun getUserInfo(name: String) = createAPI<UserApiInterface>().userInfo(name)
 }
