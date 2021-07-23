@@ -16,24 +16,33 @@ import com.example.userfragment.adapter.user.UserAdapterData
 import com.example.userfragment.adapter.user.UserRecyclerAdapter
 import com.example.userfragment.api.user.viewmodel.UserApiViewModel
 import com.example.userfragment.ui.detail.DetailDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class UserFragment : Fragment() {
 
     private lateinit var userRecyclerAdapter: UserRecyclerAdapter
+
+    private lateinit var userRecyclerView: RecyclerView
+
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_user, container, false)
+        return inflater.inflate(R.layout.fragment_user, container, false)
+    }
 
-        userRecyclerAdapter = UserRecyclerAdapter(root.context,
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        userRecyclerAdapter = UserRecyclerAdapter(view.context,
             ArrayList<UserAdapterData>(),
             object : OnUserClickListener {
                 override fun onClick(userAdapterData: UserAdapterData) {
 
-                    val detailFragment: DetailDialogFragment = DetailDialogFragment(userAdapterData.name)
+                    val detailFragment: DetailDialogFragment =
+                        DetailDialogFragment(userAdapterData.name)
                     detailFragment.isCancelable = false
                     detailFragment.show(childFragmentManager, "fragmentDialog")
 
@@ -41,12 +50,27 @@ class UserFragment : Fragment() {
                 }
             })
 
-        var userRecyclerView: RecyclerView = root.findViewById(R.id.user_recycler)
+        userRecyclerView = view.findViewById(R.id.user_recycler)
         userRecyclerView.adapter = userRecyclerAdapter
+
+        userRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(-1)) {
+                    fab.hide();
+                } else {
+                    fab.show()
+                }
+            }
+        })
+        fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                userRecyclerView.smoothScrollToPosition(userRecyclerView.top)
+            }
+        })
 
         apiUserList()
 
-        return root
     }
 
     fun apiUserList() {
