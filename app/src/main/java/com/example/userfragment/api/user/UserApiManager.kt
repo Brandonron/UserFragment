@@ -13,4 +13,6 @@ object UserApiManager : ApiService() {
     fun getUserList() = createAPI<UserApiInterface>().userList()
 
     fun getUserInfo(name: String) = createAPI<UserApiInterface>().userInfo(name)
+
+    fun getSearchList(name: String?) = createAPI<UserApiInterface>().searchList(name, 100, 1)
 }

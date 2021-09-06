@@ -29,10 +29,9 @@ class MainActivity : AppCompatActivity() {
             override fun getItemCount(): Int = fragments.size
             override fun createFragment(position: Int): Fragment = fragments[position]
         }
-        // 页面预加载
+
         viewPager.offscreenPageLimit = fragments.size
 
-        // 若不想滑动切换页面时设置
         //secondaryVP.isUserInputEnabled = false
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

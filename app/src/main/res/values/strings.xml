@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">UserFragment</string>
+    <string name="app_name">GitHub Project</string>
     <string name="title_user">User</string>
     <string name="title_mine">Mine</string>
+
+    <string name="data_empty">No Data Display</string>
+
+    <string name="search_input_hint">請輸入欲搜尋的名稱</string>
+
 </resources>

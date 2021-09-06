@@ -1,51 +1,72 @@
 package com.example.userfragment.adapter.user
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dramaproject.adapter.base.EmptyAdapter
 import com.example.userfragment.R
-import kotlinx.android.synthetic.main.layout_user_item.view.*
+import kotlinx.android.synthetic.main.item_user.view.*
 
 class UserRecyclerAdapter(
-    val context: Context,
-    var arrayList: MutableList<UserAdapterData>,
     var onUserClickListener: OnUserClickListener
-) : RecyclerView.Adapter<UserRecyclerAdapter.UserViewHolder>() {
+) : EmptyAdapter() {
+    var arrayList: MutableList<UserAdapterData> = mutableListOf()
+    var userList: List<UserAdapterData> = ArrayList<UserAdapterData>();
+    var searchList: List<UserAdapterData> = ArrayList<UserAdapterData>();
 
-    fun setUserList(list: ArrayList<UserAdapterData>) {
-        arrayList = list.toMutableList()
+    fun setUserList(list: ArrayList<UserAdapterData>?) {
+        if (list != null) {
+            userList = list
+        }
+        update(userList.toMutableList())
+    }
+
+    fun setSearchList(list: ArrayList<UserAdapterData>?) {
+        if (list != null) {
+            searchList = list
+        }
+        update(searchList.toMutableList())
+    }
+
+    private fun update(list: MutableList<UserAdapterData>) {
+        arrayList = list
         notifyDataSetChanged()
     }
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-
-        recyclerView.layoutManager = LinearLayoutManager(context)
-
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        var root =
-            LayoutInflater.from(parent.context).inflate(R.layout.layout_user_item, parent, false)
-        return UserViewHolder(root)
-    }
-
     override fun getItemCount(): Int {
-        return arrayList.size
+        return if (arrayList!!.isEmpty())
+            super.getItemCount()
+        else arrayList!!.size
     }
 
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+    override fun getItemViewType(position: Int): Int {
+        return if (arrayList.isEmpty())
+            super.getItemViewType(position)
+        else {
+            R.layout.item_user
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (arrayList.isEmpty())
+            super.onCreateViewHolder(parent, viewType)
+        else {
+            UserViewHolder(
+                LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+            )
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (arrayList.isEmpty())
+            super.onBindViewHolder(holder, position)
+        else {
+            onBindItemViewHolder((holder as UserViewHolder), position)
+        }
+    }
+
+    fun onBindItemViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(arrayList.get(position))
     }
 

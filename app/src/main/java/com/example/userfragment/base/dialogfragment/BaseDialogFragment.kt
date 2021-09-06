@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
 import com.example.userfragment.R
 
@@ -72,14 +74,15 @@ open class BaseDialogFragment : DialogFragment() {
         } else if (getWindowHeightPercent().toInt() == -2) {
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
         } else {
-            layoutParams.height = (windowHeight * getWindowHeightPercent()).toInt() - getStatusBarHeight(dialog.context)
+            layoutParams.height =
+                (windowHeight * getWindowHeightPercent()).toInt() - getStatusBarHeight(dialog.context)
         }
 
-        if (windowHeight * 0.8 < dialogHeight) {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-        } else {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        }
+//        if (windowHeight * 0.8 < dialogHeight) {
+//            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+//        } else {
+//            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+//        }
 
         // TODO: 2019/3/19 設置顯示動畫
         layoutParams.windowAnimations = R.style.BottomSlideStyle

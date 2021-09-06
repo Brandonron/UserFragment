@@ -1,12 +1,11 @@
 package com.example.userfragment.api.user.viewmodel
 
+import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.userfragment.api.user.UserApiManager
-import com.example.userfragment.api.user.response.UserListResponse
-import com.example.userfragment.api.user.response.UserInfoResponse
-import com.example.userfragment.api.user.response.UserResponse
+import com.example.userfragment.api.user.response.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +19,8 @@ class UserApiViewModel() : ViewModel() {
     val userInfo = MutableLiveData<UserInfoResponse>()
 
     val userList = MutableLiveData<UserListResponse>()
+
+    val searchList = MutableLiveData<SearchListResponse>()
 
     fun getUser() {
         UserApiManager.getUser()
@@ -80,6 +81,32 @@ class UserApiViewModel() : ViewModel() {
                         userInfo.postValue(response.body())
                     } else {
 
+                    }
+                }
+            })
+    }
+
+    fun getSearchList(name: String?) {
+        UserApiManager.getSearchList(name)
+            .enqueue(object : Callback<SearchListResponse> {
+                override fun onFailure(call: Call<SearchListResponse>, t: Throwable) {
+                    errorMessage.postValue(t.message)
+                }
+
+                override fun onResponse(
+                    call: Call<SearchListResponse>,
+                    response: Response<SearchListResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        searchList.postValue(response.body())
+                    } else {
+                        searchList.postValue(
+                            SearchListResponse(
+                                false,
+                                arrayListOf<SearchItem>(),
+                                0
+                            )
+                        )
                     }
                 }
             })
