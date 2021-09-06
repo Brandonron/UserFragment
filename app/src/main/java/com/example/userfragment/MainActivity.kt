@@ -6,15 +6,16 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.userfragment.ui.mine.MineFragment
+import com.example.userfragment.ui.search.SearchFragment
 import com.example.userfragment.ui.user.UserFragment
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-
 class MainActivity : AppCompatActivity() {
 
-    private val fragments = arrayOf(UserFragment(), MineFragment())
-    private val itemIds = arrayOf(R.id.navigation_user, R.id.navigation_mine)
+    private val fragments = arrayOf(UserFragment(), SearchFragment(), MineFragment())
+    private val itemIds =
+        arrayOf(R.id.navigation_user, R.id.navigation_search, R.id.navigation_mine)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

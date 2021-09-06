@@ -1,4 +1,4 @@
-package com.example.userfragment.adapter.user
+package com.example.userfragment.adapter.search
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,14 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dramaproject.adapter.base.EmptyAdapter
 import com.example.userfragment.R
+import com.example.userfragment.adapter.user.OnRecyclerViewItemCallBack
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserRecyclerAdapter(
-    var onUserClickListener: OnRecyclerViewItemCallBack<UserAdapterData>
+class SearchRecyclerAdapter(
+    var onItemClickListener: OnRecyclerViewItemCallBack<SearchAdapterData>
 ) : EmptyAdapter() {
-    var arrayList: MutableList<UserAdapterData> = mutableListOf()
+    var arrayList: MutableList<SearchAdapterData> = mutableListOf()
 
-    fun updateList(list: ArrayList<UserAdapterData>?) {
+    fun updateList(list: ArrayList<SearchAdapterData>?) {
         arrayList = list!!.toMutableList()
         notifyDataSetChanged()
     }
@@ -28,7 +29,7 @@ class UserRecyclerAdapter(
         return if (arrayList.isEmpty())
             super.getItemViewType(position)
         else {
-            R.layout.item_user
+            R.layout.item_search
         }
     }
 
@@ -55,13 +56,13 @@ class UserRecyclerAdapter(
     }
 
     inner class UserViewHolder(private val binding: View) : RecyclerView.ViewHolder(binding) {
-        fun bind(data: UserAdapterData) {
+        fun bind(data: SearchAdapterData) {
             binding.user_img.setImageURI(data.url)
             binding.user_name.text = data.name
             binding.user_subname.text = data.subName
 
             binding.setOnClickListener(View.OnClickListener {
-                onUserClickListener?.onClick(data)
+                onItemClickListener?.onClick(data)
             })
         }
     }

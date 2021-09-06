@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_user" />
 
     <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.userfragment.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
         android:id="@+id/navigation_mine"
         android:name="com.example.userfragment.ui.mine.MineFragment"
         android:label="@string/title_mine"
