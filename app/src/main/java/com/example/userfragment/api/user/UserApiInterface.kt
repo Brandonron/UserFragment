@@ -1,6 +1,6 @@
 package com.example.userfragment.api.user
 
-import com.example.userfragment.api.user.response.SearchListResponse
+import com.example.userfragment.api.user.response.SearchResponse
 import com.example.userfragment.api.user.response.UserInfoResponse
 import com.example.userfragment.api.user.response.UserListResponse
 import com.example.userfragment.api.user.response.UserResponse
@@ -21,5 +21,9 @@ interface UserApiInterface {
 
     @GET("search/users")
     fun searchList(@Query("q") name: String?, @Query("per_page") count: Int?,
-                   @Query("page") page: Int?): Call<SearchListResponse>
+                   @Query("page") page: Int?): Call<SearchResponse>
+
+    @GET("search/users")
+    suspend fun search(@Query("q") name: String?, @Query("per_page") count: Int?,
+                           @Query("page") page: Int?): SearchResponse
 }

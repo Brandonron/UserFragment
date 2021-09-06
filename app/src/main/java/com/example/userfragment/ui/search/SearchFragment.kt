@@ -3,33 +3,41 @@ package com.example.userfragment.ui.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dramaproject.base.viewmodel.BaseViewModelFactory
 import com.example.userfragment.R
-import com.example.userfragment.adapter.search.SearchAdapterData
-import com.example.userfragment.adapter.search.SearchRecyclerAdapter
+import com.example.userfragment.adapter.search.paging.FooterAdapter
+import com.example.userfragment.adapter.search.paging.SearchPageAdapter
 import com.example.userfragment.adapter.user.OnRecyclerViewItemCallBack
-import com.example.userfragment.adapter.user.UserAdapterData
-import com.example.userfragment.adapter.user.UserRecyclerAdapter
+import com.example.userfragment.api.user.response.SearchListResponse
 import com.example.userfragment.api.user.viewmodel.UserApiViewModel
 import com.example.userfragment.ui.detail.DetailDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.*
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
+    private val userApiViewModel: UserApiViewModel by lazy {
+        ViewModelProviders.of(
+            this,
+            BaseViewModelFactory { UserApiViewModel() })
+            .get(UserApiViewModel::class.java)
+    }
+
     private lateinit var searchInput: EditText
 
-    private lateinit var userApiViewModel: UserApiViewModel
+    private lateinit var searchPageAdapter: SearchPageAdapter
 
-    private lateinit var searchRecyclerAdapter: SearchRecyclerAdapter
+//    private lateinit var searchRecyclerAdapter: SearchRecyclerAdapter
 
     private lateinit var searchRecyclerView: RecyclerView
 
@@ -49,7 +57,13 @@ class SearchFragment : Fragment() {
         searchInput = view.findViewById(R.id.edit_input_search)
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                userApiViewModel.getSearchList(s.toString())
+//                userApiViewModel.getSearchList(s.toString())
+                lifecycleScope.launch {
+                    userApiViewModel.getPagingData(s.toString()).collect { pagingData ->
+                        searchPageAdapter.submitData(pagingData)
+                    }
+                }
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -60,22 +74,33 @@ class SearchFragment : Fragment() {
             }
         })
 
-        searchRecyclerAdapter =
-            SearchRecyclerAdapter(object : OnRecyclerViewItemCallBack<SearchAdapterData> {
-                override fun onClick(userAdapterData: SearchAdapterData) {
 
+//        searchRecyclerAdapter =
+//            SearchRecyclerAdapter(object : OnRecyclerViewItemCallBack<SearchAdapterData> {
+//                override fun onClick(userAdapterData: SearchAdapterData) {
+//
+//                    val detailFragment: DetailDialogFragment =
+//                        DetailDialogFragment(userAdapterData.name)
+//                    detailFragment.isCancelable = false
+//                    detailFragment.show(childFragmentManager, "fragmentDialog")
+//
+//                    Toast.makeText(context, "" + userAdapterData.name, Toast.LENGTH_SHORT).show()
+//                }
+//            })
+
+        searchPageAdapter =
+            SearchPageAdapter(object : OnRecyclerViewItemCallBack<SearchListResponse> {
+                override fun onClick(data: SearchListResponse) {
                     val detailFragment: DetailDialogFragment =
-                        DetailDialogFragment(userAdapterData.name)
+                        DetailDialogFragment(data.login)
                     detailFragment.isCancelable = false
                     detailFragment.show(childFragmentManager, "fragmentDialog")
 
-                    Toast.makeText(context, "" + userAdapterData.name, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "" + data.login, Toast.LENGTH_SHORT).show()
                 }
             })
 
         searchRecyclerView = view.findViewById(R.id.search_recycler)
-        searchRecyclerView.adapter = searchRecyclerAdapter
-
         searchRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(-1)) {
@@ -85,6 +110,8 @@ class SearchFragment : Fragment() {
                 }
             }
         })
+        searchRecyclerView.adapter = searchPageAdapter.withLoadStateFooter(FooterAdapter { searchPageAdapter.retry() })
+
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -92,29 +119,29 @@ class SearchFragment : Fragment() {
             }
         })
 
-        userApiViewModel = ViewModelProviders.of(
-            this,
-            BaseViewModelFactory { UserApiViewModel() })
-            .get(UserApiViewModel::class.java)
+//        userApiViewModel = ViewModelProviders.of(
+//            this,
+//            BaseViewModelFactory { UserApiViewModel() })
+//            .get(UserApiViewModel::class.java)
 
-        userApiViewModel.searchList.observe(viewLifecycleOwner, Observer {
-            var list: ArrayList<SearchAdapterData> = ArrayList<SearchAdapterData>()
-            it?.items?.forEach { item ->
-                println(item)
-                var userAdapterData = SearchAdapterData(
-                    item.avatar_url,
-                    item.login,
-                    item.type
-                )
-                list.add(userAdapterData)
-            }
-            searchRecyclerAdapter.updateList(list)
-
-            Toast.makeText(
-                context,
-                "" + it?.total_count + " / " + it?.incomplete_results,
-                Toast.LENGTH_SHORT
-            ).show()
-        })
+//        userApiViewModel.searchList.observe(viewLifecycleOwner, Observer {
+//            var list: ArrayList<SearchAdapterData> = ArrayList<SearchAdapterData>()
+//            it?.items?.forEach { item ->
+//                println(item)
+//                var userAdapterData = SearchAdapterData(
+//                    item.avatar_url,
+//                    item.login,
+//                    item.type
+//                )
+//                list.add(userAdapterData)
+//            }
+//            searchRecyclerAdapter.updateList(list)
+//
+//            Toast.makeText(
+//                context,
+//                "" + it?.total_count + " / " + it?.incomplete_results,
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        })
     }
 }

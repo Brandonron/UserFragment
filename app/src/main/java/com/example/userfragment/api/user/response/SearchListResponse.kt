@@ -1,12 +1,6 @@
 package com.example.userfragment.api.user.response
 
-class SearchListResponse(
-    val incomplete_results: Boolean,
-    val items: List<SearchItem>,
-    val total_count: Int
-)
-
-data class SearchItem(
+data class SearchListResponse(
     val avatar_url: String,
     val events_url: String,
     val followers_url: String,
@@ -27,4 +21,3 @@ data class SearchItem(
     val type: String,
     val url: String
 )
-

@@ -1,11 +1,15 @@
 package com.example.userfragment.api.user.viewmodel
 
-import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.userfragment.api.user.UserApiManager
 import com.example.userfragment.api.user.response.*
+import com.example.userfragment.adapter.search.paging.Repository
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +24,7 @@ class UserApiViewModel() : ViewModel() {
 
     val userList = MutableLiveData<UserListResponse>()
 
-    val searchList = MutableLiveData<SearchListResponse>()
+    val searchList = MutableLiveData<SearchResponse>()
 
     fun getUser() {
         UserApiManager.getUser()
@@ -88,27 +92,31 @@ class UserApiViewModel() : ViewModel() {
 
     fun getSearchList(name: String?) {
         UserApiManager.getSearchList(name)
-            .enqueue(object : Callback<SearchListResponse> {
-                override fun onFailure(call: Call<SearchListResponse>, t: Throwable) {
+            .enqueue(object : Callback<SearchResponse> {
+                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
                     errorMessage.postValue(t.message)
                 }
 
                 override fun onResponse(
-                    call: Call<SearchListResponse>,
-                    response: Response<SearchListResponse>
+                    call: Call<SearchResponse>,
+                    response: Response<SearchResponse>
                 ) {
                     if (response.isSuccessful) {
                         searchList.postValue(response.body())
                     } else {
                         searchList.postValue(
-                            SearchListResponse(
+                            SearchResponse(
                                 false,
-                                arrayListOf<SearchItem>(),
+                                emptyList(),
                                 0
                             )
                         )
                     }
                 }
             })
+    }
+
+    fun getPagingData(name: String?): Flow<PagingData<SearchListResponse>> {
+        return Repository.getPagingData(name).cachedIn(viewModelScope)
     }
 }
